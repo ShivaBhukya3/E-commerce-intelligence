@@ -4,10 +4,34 @@ Streamlit multi-page dashboard — run with: streamlit run dashboard/app.py
 """
 
 import sys
+import subprocess
 import warnings
 warnings.filterwarnings("ignore")
 
 from pathlib import Path
+
+# ── Auto-generate data on Railway / first run ────────────────
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+_raw  = ROOT / "data" / "raw"  / "ecommerce_data.csv"
+_proc = ROOT / "data" / "processed" / "cleaned_data.csv"
+
+if not _raw.exists():
+    _raw.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run([sys.executable, str(ROOT / "data" / "generate_data.py")], check=True)
+
+if not _proc.exists():
+    _proc.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run([sys.executable, "-c",
+        "import sys; sys.path.insert(0,'.'); "
+        "from src.data_loader import DataLoader; from src.data_cleaner import DataCleaner; "
+        "from pathlib import Path; "
+        "df=DataLoader().load_raw_data(); dc=DataCleaner().clean(df); "
+        "Path('data/processed').mkdir(parents=True,exist_ok=True); "
+        "dc.to_csv('data/processed/cleaned_data.csv',index=False)"
+    ], check=True, cwd=str(ROOT))
+
 import numpy as np
 import pandas as pd
 import plotly.express as px
