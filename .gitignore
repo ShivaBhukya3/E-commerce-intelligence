@@ -1,0 +1,70 @@
+# ── Python ──────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+*.pyo
+
+# ── Virtual environments ─────────────────────────────────────
+.env
+.venv
+env/
+venv/
+ENV/
+.conda/
+
+# ── Jupyter ──────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ── Data files (large) ───────────────────────────────────────
+# Ignore raw data (large CSV in version control)
+data/raw/*.csv
+data/raw/*.parquet
+data/raw/*.xlsx
+
+# Keep processed outputs and visuals
+!data/processed/
+!data/processed/.gitkeep
+!visuals/
+!visuals/.gitkeep
+
+# ── Secrets ──────────────────────────────────────────────────
+.env
+.env.local
+.env.*
+secrets.yaml
+secrets.json
+credentials.json
+*.key
+*.pem
+
+# ── IDE / OS ─────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Build / dist ─────────────────────────────────────────────
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ── Pytest / coverage ────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+*.coverage
+
+# ── Streamlit ────────────────────────────────────────────────
+.streamlit/secrets.toml
+
+# ── Misc ─────────────────────────────────────────────────────
+*.log
+*.tmp
+*.bak
