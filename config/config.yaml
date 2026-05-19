@@ -1,0 +1,203 @@
+# ============================================================
+# E-Commerce Customer Behavior Analysis — Configuration File
+# ============================================================
+
+# ── File Paths ──────────────────────────────────────────────
+paths:
+  raw_data:        "data/raw/ecommerce_data.csv"
+  processed_data:  "data/processed/cleaned_data.csv"
+  rfm_data:        "data/processed/rfm_segments.csv"
+  cohort_data:     "data/processed/cohort_matrix.csv"
+  visuals_dir:     "visuals/"
+  reports_dir:     "reports/"
+  notebooks_dir:   "notebooks/"
+
+# ── Column Names ────────────────────────────────────────────
+columns:
+  order_id:           "order_id"
+  customer_id:        "customer_id"
+  customer_name:      "customer_name"
+  customer_email:     "customer_email"
+  customer_age:       "customer_age"
+  customer_gender:    "customer_gender"
+  customer_city:      "customer_city"
+  customer_state:     "customer_state"
+  registration_date:  "registration_date"
+  order_date:         "order_date"
+  order_status:       "order_status"
+  product_id:         "product_id"
+  product_name:       "product_name"
+  category:           "category"
+  sub_category:       "sub_category"
+  brand:              "brand"
+  unit_price:         "unit_price"
+  quantity:           "quantity"
+  discount_percent:   "discount_percent"
+  shipping_cost:      "shipping_cost"
+  payment_method:     "payment_method"
+  device_type:        "device_type"
+  rating:             "rating"
+  review_text:        "review_text"
+  is_returned:        "is_returned"
+  delivery_days:      "delivery_days"
+
+# ── Dataset Generation ──────────────────────────────────────
+data_generation:
+  n_rows:              10000
+  n_customers:         3000       # ~60% repeat rate → 3000 unique customers for 10k orders
+  date_start:          "2022-01-01"
+  date_end:            "2024-12-31"
+  seasonal_boost_months: [10, 11, 12]   # Oct-Dec higher sales
+  seasonal_multiplier:  2.0
+  missing_rating_pct:   0.15            # 15% missing ratings
+  missing_review_pct:   0.30            # 30% missing reviews
+  random_seed:          42
+
+# ── Cleaning Parameters ─────────────────────────────────────
+cleaning:
+  max_unit_price:       500000
+  min_unit_price:       0
+  max_quantity:         50
+  fill_review_text:     "No Review"
+  outlier_method:       "iqr"           # "iqr" or "zscore"
+
+# ── Feature Engineering ──────────────────────────────────────
+features:
+  rfm_quantile_bins:    5
+  clv_lifespan_months:  12
+  high_value_percentile: 0.80           # top 20% by CLV
+  shopping_segments:
+    one_time:    1
+    occasional:  [2, 3]
+    regular:     [4, 6]
+    loyal:       7                      # 7+ orders
+
+# ── Segmentation ────────────────────────────────────────────
+segmentation:
+  kmeans_clusters:      4
+  kmeans_random_state:  42
+  kmeans_max_iter:      300
+  pca_components:       2
+  cluster_labels:
+    - "High Value"
+    - "Medium Value"
+    - "Budget Shoppers"
+    - "Churned Risk"
+  rfm_segments:
+    Champions:         {r_min: 4, f_min: 4}
+    Loyal_Customers:   {r_min: 3, f_min: 3}
+    Potential_Loyalists: {r_min: 3, f_min: 1}
+    At_Risk:           {r_max: 2, f_min: 3}
+    Lost_Customers:    {r_max: 2, f_max: 2}
+    New_Customers:     {r_min: 4, f_max: 1}
+    Promising:         {r_min: 3, f_max: 2}
+
+# ── Cohort Analysis ─────────────────────────────────────────
+cohort:
+  retention_months:     12
+  min_cohort_size:      5
+
+# ── Dashboard Settings ───────────────────────────────────────
+dashboard:
+  title:        "E-Commerce Customer Behavior Intelligence"
+  page_icon:    "🛒"
+  layout:       "wide"
+  sidebar_logo: "🛒"
+  currency_symbol: "₹"
+  date_format:  "%b %Y"
+
+# ── Color Themes ────────────────────────────────────────────
+colors:
+  background:   "#0f1117"
+  card_bg:      "#1c1c2e"
+  accent:       "#00d4ff"
+  accent_alt:   "#7c3aed"
+  positive:     "#22c55e"
+  negative:     "#ef4444"
+  neutral:      "#f59e0b"
+  text_primary: "#ffffff"
+  text_secondary: "#94a3b8"
+  plotly_template: "plotly_dark"
+  palette:
+    - "#00d4ff"
+    - "#7c3aed"
+    - "#22c55e"
+    - "#f59e0b"
+    - "#ef4444"
+    - "#06b6d4"
+    - "#8b5cf6"
+    - "#10b981"
+
+# ── Categories & Sub-categories ─────────────────────────────
+categories:
+  Electronics:
+    sub_categories: ["Smartphones", "Laptops", "Tablets", "Headphones", "Cameras", "Smart Watches", "TV & Monitors"]
+    price_range: [500, 150000]
+    brands: ["Samsung", "Apple", "OnePlus", "Sony", "LG", "Dell", "HP", "Lenovo"]
+  Fashion:
+    sub_categories: ["Men's Clothing", "Women's Clothing", "Footwear", "Accessories", "Bags", "Jewellery"]
+    price_range: [200, 15000]
+    brands: ["Zara", "H&M", "Levi's", "Nike", "Adidas", "Puma", "UCB", "Mango"]
+  "Home & Kitchen":
+    sub_categories: ["Kitchen Appliances", "Furniture", "Bedding", "Home Decor", "Cookware", "Storage"]
+    price_range: [300, 50000]
+    brands: ["Philips", "Prestige", "Havells", "Bajaj", "Bosch", "Whirlpool", "IKEA"]
+  Sports:
+    sub_categories: ["Fitness Equipment", "Outdoor Sports", "Team Sports", "Yoga & Meditation", "Cycling"]
+    price_range: [300, 30000]
+    brands: ["Nike", "Adidas", "Puma", "Decathlon", "Reebok", "Under Armour", "Cosco"]
+  Beauty:
+    sub_categories: ["Skincare", "Haircare", "Makeup", "Fragrances", "Men's Grooming", "Wellness"]
+    price_range: [150, 8000]
+    brands: ["Lakme", "L'Oreal", "Maybelline", "Himalaya", "Biotique", "Dove", "Mamaearth"]
+  Books:
+    sub_categories: ["Fiction", "Non-Fiction", "Educational", "Self-Help", "Comics", "Children's Books"]
+    price_range: [100, 2000]
+    brands: ["Penguin", "HarperCollins", "Scholastic", "S. Chand", "Arihant", "Oxford"]
+  Toys:
+    sub_categories: ["Action Figures", "Board Games", "Educational Toys", "Outdoor Toys", "Dolls", "Remote Control"]
+    price_range: [200, 5000]
+    brands: ["Lego", "Hasbro", "Mattel", "Funskool", "Fisher-Price", "Hot Wheels", "Barbie"]
+
+# ── Indian Cities & States ───────────────────────────────────
+geography:
+  cities_states:
+    Mumbai:         "Maharashtra"
+    Delhi:          "Delhi"
+    Bangalore:      "Karnataka"
+    Hyderabad:      "Telangana"
+    Chennai:        "Tamil Nadu"
+    Kolkata:        "West Bengal"
+    Pune:           "Maharashtra"
+    Ahmedabad:      "Gujarat"
+    Jaipur:         "Rajasthan"
+    Lucknow:        "Uttar Pradesh"
+    Surat:          "Gujarat"
+    Kanpur:         "Uttar Pradesh"
+    Nagpur:         "Maharashtra"
+    Indore:         "Madhya Pradesh"
+    Bhopal:         "Madhya Pradesh"
+    Visakhapatnam:  "Andhra Pradesh"
+    Patna:          "Bihar"
+    Vadodara:       "Gujarat"
+    Coimbatore:     "Tamil Nadu"
+    Agra:           "Uttar Pradesh"
+    Noida:          "Uttar Pradesh"
+    Gurgaon:        "Haryana"
+    Kochi:          "Kerala"
+    Chandigarh:     "Punjab"
+    Bhubaneswar:    "Odisha"
+
+# ── Order & Payment Settings ────────────────────────────────
+orders:
+  statuses:           ["Completed", "Returned", "Cancelled", "Pending"]
+  status_weights:     [0.70, 0.12, 0.10, 0.08]
+  payment_methods:    ["Credit Card", "Debit Card", "UPI", "Net Banking", "COD", "Wallet"]
+  payment_weights:    [0.22, 0.18, 0.30, 0.10, 0.15, 0.05]
+  device_types:       ["Mobile", "Desktop", "Tablet"]
+  device_weights:     [0.60, 0.30, 0.10]
+  genders:            ["Male", "Female", "Other"]
+  gender_weights:     [0.48, 0.48, 0.04]
+  delivery_days_min:  2
+  delivery_days_max:  15
+  shipping_cost_range: [0, 200]

@@ -1,0 +1,28 @@
+# Core data stack
+pandas>=2.0.0
+numpy>=1.26.0
+
+# Visualisation
+matplotlib>=3.7.0
+seaborn>=0.13.0
+plotly>=5.18.0
+
+# Machine learning
+scikit-learn>=1.4.0
+scipy>=1.12.0
+
+# Dashboard
+streamlit>=1.32.0
+
+# Config & utilities
+pyyaml>=6.0.1
+openpyxl>=3.1.2
+
+# Notebooks (local only, lightweight)
+nbformat>=5.10.0
+
+# Reporting
+jinja2>=3.1.3
+
+# Testing
+pytest>=8.0.0
