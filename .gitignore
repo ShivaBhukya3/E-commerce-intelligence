@@ -19,7 +19,6 @@ ENV/
 *.ipynb_checkpoints
 
 # ── Data files ───────────────────────────────────────────────
-# Raw data generated at runtime — ignore large CSVs
 data/raw/*.csv
 data/raw/*.parquet
 data/raw/*.xlsx
